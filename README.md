@@ -6,8 +6,7 @@
 
 ## Demo
 - Repo: https://github.com/jiayi-jin/ai-risk-dashboard-mvp
-- Live demo (optional): <你的 Vercel 链接（如果有）>
-- Demo GIF (recommended): `docs/demo.gif`
+- ![Demo](docs/demo.gif)
 
 ---
 
