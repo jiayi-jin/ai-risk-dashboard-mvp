@@ -33,11 +33,6 @@
 ---
 
 ## Screenshots
-> 建议把截图放在 `docs/screenshots/`
-
-- `docs/screenshots/dashboard.png`
-- `docs/screenshots/new.png`
-- `docs/screenshots/report.png`
 
 ![Dashboard](docs/screenshots/dashboard.png)
 ![New Analysis](docs/screenshots/new.png)
