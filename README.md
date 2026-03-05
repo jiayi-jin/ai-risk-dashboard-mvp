@@ -1,77 +1,70 @@
-## AI 设计稳定性与风险评估系统（MVP）
+# AI 设计稳定性与风险评估系统 (MVP)  
+# AI Design Stability & Risk Evaluation Dashboard (MVP)
 
-一个基于 Next.js App Router 的小型 Dashboard，用于：
+一个面向 **B2B 设计评审 / 版本对比** 的 AI Dashboard：上传 2–3 个设计版本，选择行业 + Persona + 权重，一键生成“虚拟受访者反馈 + 文本审计”，并输出版本对比（加权总分 / 稳定性 / 置信区间）。  
+A demo-ready AI dashboard for **B2B design review & variant comparison**: upload 2–3 design variants, choose industry + persona + weights, and generate simulated consumer feedback + audit results with summary comparisons.
 
-- 上传 2-3 张包装设计图（A/B/C）
-- 选择行业与 Persona 组合
-- 配置喜欢度 / 购买意愿 / 信任度权重
-- 真实调用双 Agent：
-  - Agent A（OpenAI）根据 persona 对图片给出“像真人的评价 + 打分”
-  - Agent B（Gemini）审计 Agent A 的文本，打分其“像真人程度 & persona 匹配度”
-- 生成分析报告，展示多版本得分与抽样文本
+---
 
-### 1. 环境准备
+## Demo / 演示
+- Repo: https://github.com/jiayi-jin/ai-risk-dashboard-mvp  
+- Live demo (optional): `<Vercel link if available>`  
+- Short demo video/GIF (recommended): `docs/demo.gif`
 
-1. 安装依赖：
+---
 
+## What it does / 核心功能
+**Dashboard**
+- 历史运行记录 + 一键新建分析  
+- View run history + create a new analysis
+
+**New Analysis**
+- 上传图片（2–3 张版本对比，最多 3 张）  
+- 选择行业 / Persona（固定 3 个模板）  
+- 权重配置（喜欢度 / 购买意愿 / 信任度，总和=100）  
+- Upload 2–3 images, pick industry/persona, set weighted scoring, and start analysis
+
+**Report**
+- 版本对比：加权总分、稳定性（标准差）、95% 区间  
+- 抽样展示：  
+  - Agent A (GPT)：以 Persona 口吻给出真实评价 + 0–100 分  
+  - Agent B (Gemini)：审计 A 的“像真人程度 / Persona 匹配度 / 具体性”  
+- Variant comparison + sampled outputs from Agent A and audit from Agent B
+
+---
+
+## Screenshots / 截图
+> 建议把截图放到 `docs/screenshots/`  
+- `docs/screenshots/dashboard.png`  
+- `docs/screenshots/new.png`  
+- `docs/screenshots/report.png`
+
+![Dashboard](docs/screenshots/dashboard.png)  
+![New Analysis](docs/screenshots/new.png)  
+![Report](docs/screenshots/report.png)
+
+---
+
+## Why it’s credible / 为什么结果更可信（MVP 版本）
+- **配置可追溯**：行业 / Persona / 权重 / 模型选择与输出 JSON 都可回看  
+- **对比友好**：同一配置下比较多个版本，减少“随便跑一次”的偶然性  
+- **审计机制**：B 端对 A 的“像真人/一致性”进行检查（若不可用可降级）  
+- Traceable configs + consistent comparison + audit mechanism
+
+> 后续可扩展：扰动性/鲁棒性测试、多轮采样、惩罚机制等。  
+> Future work: robustness tests, multi-run sampling, penalties, etc.
+
+---
+
+## Tech Stack / 技术栈
+- Next.js (App Router)
+- Supabase (Postgres + Storage)
+- OpenAI (Agent A)
+- Gemini (Agent B)
+
+---
+
+## Quickstart (Local) / 本地运行
+### 1) Install
 ```bash
-npm install
-```
-
-2. 复制环境变量模板：
-
-```bash
-cp .env.example .env.local
-```
-
-3. 在 `.env.local` 中填写你的密钥：
-
-- `OPENAI_API_KEY`：OpenAI API Key（建议使用支持图像输入的最新模型）
-- `GEMINI_API_KEY`：Google Gemini API Key
-- `NEXT_PUBLIC_SUPABASE_URL`：Supabase 项目 URL
-- `SUPABASE_SERVICE_ROLE_KEY`：Supabase Service Role Key（仅在服务端使用）
-- `SUPABASE_STORAGE_BUCKET`：在 Storage 中创建的公开 bucket 名称，例如 `designs`
-
-> 注意：`.env.local` 不应提交到版本库。
-
-### 2. Supabase 配置
-
-在你的 Supabase 项目中：
-
-1. 创建表 `analyses`（可通过 SQL Editor 执行）：
-
-```sql
-create table if not exists analyses (
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz default now(),
-  industry text not null,
-  variant_count int not null,
-  personas jsonb not null,
-  weights jsonb not null,
-  result jsonb,
-  status text default 'pending'
-);
-
-create index if not exists analyses_created_at on analyses(created_at desc);
-```
-
-2. 在 Storage 中创建公开 bucket（如：`designs`），并在 `.env.local` 中保持同名。
-
-### 3. 本地运行
-
-```bash
-npm run dev
-```
-
-然后在浏览器访问 `http://localhost:3000`：
-
-- `Dashboard`：查看历史分析记录、新建分析入口
-- `新建分析`：上传图片、选择行业与 Persona、设置权重并启动分析
-- 报告页：从 Dashboard 或分析完成后跳转，查看抽样文本与评分
-
-### 4. 注意事项
-
-- 当前版本按「1 轮 × 每 persona 5 人」真实调用模型，结构已预留为后续扩展多轮模拟。
-- 若 OpenAI / Gemini 或 Supabase 任一未配置，相关功能会报错或提示，请检查 `.env.local`。
-- 本项目主要面向早期设计风险筛选与决策支持，不用于真实销量预测或替代用户调研。
-
+npm i
