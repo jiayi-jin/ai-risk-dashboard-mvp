@@ -1,5 +1,4 @@
 # AI 设计稳定性与风险评估系统 (MVP)  
-# AI Design Stability & Risk Evaluation Dashboard (MVP)
 
 一个面向 **B2B 设计评审 / 版本对比** 的 AI Dashboard：上传 2–3 个设计版本，选择行业 + Persona + 权重，一键生成“虚拟受访者反馈 + 文本审计”，并输出版本对比（加权总分 / 稳定性 / 置信区间）。  
 A demo-ready AI dashboard for **B2B design review & variant comparison**: upload 2–3 design variants, choose industry + persona + weights, and generate simulated consumer feedback + audit results with summary comparisons.
